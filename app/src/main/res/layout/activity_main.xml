@@ -100,33 +100,45 @@
                 android:id="@+id/btnRunNow"
                 style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="0dp"
-                android:layout_height="42dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="▶ 지금 실행"
-                android:textSize="13sp"
+                android:text="▶ 실행"
+                android:textSize="12sp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
                 android:backgroundTint="#1A1A2E"/>
 
-            <View android:layout_width="8dp" android:layout_height="1dp"/>
+            <View android:layout_width="6dp" android:layout_height="1dp"/>
 
             <Button
                 android:id="@+id/btnReload"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="0dp"
-                android:layout_height="42dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="↻ 새로고침"
-                android:textSize="13sp"/>
+                android:textSize="12sp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"/>
 
-            <View android:layout_width="8dp" android:layout_height="1dp"/>
+            <View android:layout_width="6dp" android:layout_height="1dp"/>
 
             <Button
                 android:id="@+id/btnCancel"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="0dp"
-                android:layout_height="42dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="■ 스케줄 취소"
-                android:textSize="12sp"/>
+                android:text="■ 취소"
+                android:textSize="12sp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"/>
         </LinearLayout>
 
         <ProgressBar
