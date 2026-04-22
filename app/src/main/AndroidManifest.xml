@@ -35,6 +35,11 @@
             </intent-filter>
         </receiver>
 
+        <activity
+            android:name=".ui.PlatformSettingsActivity"
+            android:exported="false"
+            android:label="플랫폼 설정" />
+
         <!-- WorkManager foreground service type (Android 14+) -->
         <service
             android:name="androidx.work.impl.foreground.SystemForegroundService"

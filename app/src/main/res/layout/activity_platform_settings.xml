@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F0F2F5">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- sencemom.site 카드 -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical">
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                        android:text="Sencemom 게시판" android:textSize="15sp" android:textStyle="bold" android:textColor="#1A1A2E"/>
+                    <Switch android:id="@+id/switchSencemom" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                </LinearLayout>
+
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="sencemom.site에 d32.org 링크 포함 글을 자동 게시합니다."
+                    android:textSize="12sp" android:textColor="#666" android:layout_marginTop="4dp" android:layout_marginBottom="12dp"/>
+
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="API 토큰 (없으면 비워두세요)" android:textSize="12sp" android:textColor="#333"/>
+
+                <EditText android:id="@+id/etSencemomToken"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:hint="선택사항" android:inputType="textPassword" android:textSize="13sp"/>
+
+                <Button android:id="@+id/btnSencemomTest"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp" android:text="연결 테스트"
+                    android:insetTop="0dp" android:insetBottom="0dp"/>
+
+                <TextView android:id="@+id/tvSencemomResult"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:textSize="12sp" android:textColor="#2563EB" android:layout_marginTop="4dp"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Tistory 카드 -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical">
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                        android:text="Tistory" android:textSize="15sp" android:textStyle="bold" android:textColor="#1A1A2E"/>
+                    <Switch android:id="@+id/switchTistory" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                </LinearLayout>
+
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="tistory.com Open API로 글을 자동 게시합니다.\n토큰: 티스토리 앱 관리 → 앱 등록 → OAuth 발급"
+                    android:textSize="12sp" android:textColor="#666" android:layout_marginTop="4dp" android:layout_marginBottom="12dp"/>
+
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Access Token" android:textSize="12sp" android:textColor="#333"/>
+                <EditText android:id="@+id/etTistoryToken"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:hint="tistory access token" android:inputType="textPassword" android:textSize="13sp"/>
+
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="블로그명 (예: myblog → myblog.tistory.com)" android:textSize="12sp" android:textColor="#333" android:layout_marginTop="8dp"/>
+                <EditText android:id="@+id/etTistoryBlog"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:hint="블로그명" android:inputType="text" android:textSize="13sp"/>
+
+                <Button android:id="@+id/btnTistoryTest"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp" android:text="연결 테스트"
+                    android:insetTop="0dp" android:insetBottom="0dp"/>
+
+                <TextView android:id="@+id/tvTistoryResult"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:textSize="12sp" android:textColor="#2563EB" android:layout_marginTop="4dp"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Medium 카드 -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical">
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                        android:text="Medium" android:textSize="15sp" android:textStyle="bold" android:textColor="#1A1A2E"/>
+                    <Switch android:id="@+id/switchMedium" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                </LinearLayout>
+
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="medium.com API로 글을 자동 게시합니다.\n토큰: medium.com → Settings → Security → Integration tokens"
+                    android:textSize="12sp" android:textColor="#666" android:layout_marginTop="4dp" android:layout_marginBottom="12dp"/>
+
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Integration Token" android:textSize="12sp" android:textColor="#333"/>
+                <EditText android:id="@+id/etMediumToken"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:hint="medium integration token" android:inputType="textPassword" android:textSize="13sp"/>
+
+                <Button android:id="@+id/btnMediumTest"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp" android:text="계정 조회 및 테스트"
+                    android:insetTop="0dp" android:insetBottom="0dp"/>
+
+                <TextView android:id="@+id/tvMediumResult"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:textSize="12sp" android:textColor="#2563EB" android:layout_marginTop="4dp"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- 저장 버튼 -->
+        <Button android:id="@+id/btnSave"
+            style="@style/Widget.MaterialComponents.Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="저장"
+            android:backgroundTint="#1A1A2E"
+            android:insetTop="0dp" android:insetBottom="0dp"
+            android:paddingTop="14dp" android:paddingBottom="14dp"/>
+
+    </LinearLayout>
+</ScrollView>

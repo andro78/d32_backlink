@@ -13,6 +13,8 @@ import com.d32.backlink.api.RetrofitClient
 import com.d32.backlink.model.BacklinkTarget
 import com.d32.backlink.worker.BacklinkScheduler
 import com.d32.backlink.worker.BacklinkWorker
+import com.d32.backlink.worker.PostingScheduler
+import com.d32.backlink.worker.PostingWorker
 import kotlinx.coroutines.launch
 
 class MainViewModel(app: Application) : AndroidViewModel(app) {
@@ -28,6 +30,12 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
     val workInfos: LiveData<List<WorkInfo>> =
         WorkManager.getInstance(app).getWorkInfosByTagLiveData("d32_backlink_manual")
+
+    val postingWorkInfos: LiveData<List<WorkInfo>> =
+        WorkManager.getInstance(app).getWorkInfosByTagLiveData(PostingWorker.WORK_TAG)
+
+    private val _postingStatus = MutableLiveData("플랫폼을 설정하고 포스팅을 실행하세요")
+    val postingStatus: LiveData<String> = _postingStatus
 
     val displayTargets: MediatorLiveData<List<BacklinkTarget>> = MediatorLiveData<List<BacklinkTarget>>().apply {
         fun merge() {
@@ -105,5 +113,30 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     fun cancelSchedule() {
         BacklinkScheduler.cancel(getApplication())
         _status.value = "스케줄 취소됨"
+    }
+
+    fun runPostingNow() {
+        PostingScheduler.runNow(getApplication())
+        _postingStatus.value = "포스팅 작업 시작됨"
+    }
+
+    fun onPostingWorkInfosChanged(infos: List<WorkInfo>) {
+        infos.forEach { info ->
+            val p        = info.progress
+            val platform = p.getString(PostingWorker.KEY_PLATFORM) ?: return@forEach
+            val status   = p.getString(PostingWorker.KEY_STATUS)   ?: return@forEach
+            val done     = p.getInt(PostingWorker.KEY_DONE, 0)
+            val total    = p.getInt(PostingWorker.KEY_TOTAL, 0)
+            _postingStatus.value = when (status) {
+                "RUNNING"  -> "$platform 포스팅 중... ($done/$total)"
+                "SUCCESS"  -> "$platform 포스팅 완료 ✅ ($done/$total)"
+                "FAILED"   -> "$platform 포스팅 실패 ❌ ($done/$total)"
+                else       -> _postingStatus.value
+            }
+        }
+        if (infos.any { it.state == WorkInfo.State.SUCCEEDED })
+            _postingStatus.value = "모든 플랫폼 포스팅 완료 ✅"
+        if (infos.any { it.state == WorkInfo.State.FAILED })
+            _postingStatus.value = "일부 포스팅 실패 — 플랫폼 설정을 확인하세요"
     }
 }

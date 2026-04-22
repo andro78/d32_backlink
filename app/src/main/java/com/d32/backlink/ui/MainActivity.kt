@@ -1,6 +1,7 @@
 package com.d32.backlink.ui
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -75,6 +76,10 @@ class MainActivity : AppCompatActivity() {
         b.btnRunNow.setOnClickListener { vm.runNow() }
         b.btnReload.setOnClickListener { vm.loadTargets() }
         b.btnCancel.setOnClickListener { vm.cancelSchedule() }
+        b.btnPostNow.setOnClickListener { vm.runPostingNow() }
+        b.btnPlatformSettings.setOnClickListener {
+            startActivity(Intent(this, PlatformSettingsActivity::class.java))
+        }
     }
 
     private fun observeViewModel() {
@@ -109,6 +114,22 @@ class MainActivity : AppCompatActivity() {
                 infos.any { it.state == WorkInfo.State.FAILED }    -> "❌ 마지막 실행 실패"
                 else                                               -> "⏳ 대기 중"
             }
+        }
+
+        vm.postingWorkInfos.observe(this) { infos ->
+            vm.onPostingWorkInfosChanged(infos)
+            val running = infos.any { it.state == WorkInfo.State.RUNNING }
+            b.btnPostNow.isEnabled = !running
+            b.tvPostWorkState.text = when {
+                running                                            -> "⚙️ 포스팅 중..."
+                infos.any { it.state == WorkInfo.State.SUCCEEDED } -> "✅ 포스팅 성공"
+                infos.any { it.state == WorkInfo.State.FAILED }    -> "❌ 포스팅 실패"
+                else                                               -> "⏳ 대기 중"
+            }
+        }
+
+        vm.postingStatus.observe(this) { msg ->
+            b.tvPostStatus.text = msg
         }
     }
 }

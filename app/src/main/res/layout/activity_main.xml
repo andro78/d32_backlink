@@ -152,6 +152,86 @@
             android:progressTint="#1A1A2E"/>
     </LinearLayout>
 
+    <!-- SEO 포스팅 섹션 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#FFFFFF"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="12dp"
+        android:elevation="1dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="6dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="SEO 포스팅"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:textColor="#1A1A2E"/>
+
+            <TextView
+                android:id="@+id/tvPostWorkState"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="⏳ 대기 중"
+                android:textSize="12sp"
+                android:textColor="#666"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvPostStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="플랫폼을 설정하고 포스팅을 실행하세요"
+            android:textSize="12sp"
+            android:textColor="#888"
+            android:layout_marginBottom="8dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnPostNow"
+                style="@style/Widget.MaterialComponents.Button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="▶ 포스팅"
+                android:textSize="12sp"
+                android:backgroundTint="#2563EB"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"/>
+
+            <View android:layout_width="8dp" android:layout_height="1dp"/>
+
+            <Button
+                android:id="@+id/btnPlatformSettings"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="⚙ 플랫폼 설정"
+                android:textSize="12sp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"/>
+        </LinearLayout>
+    </LinearLayout>
+
     <!-- 소스 사이트 안내 -->
     <LinearLayout
         android:layout_width="match_parent"
