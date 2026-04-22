@@ -1,10 +1,10 @@
 package com.d32.backlink.posting
 
 import android.util.Log
-import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.FormBody
+import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 
 class V2BoardPoster(private val store: PlatformTokenStore) {
@@ -16,7 +16,6 @@ class V2BoardPoster(private val store: PlatformTokenStore) {
     companion object {
         private const val TAG = "V2BoardPoster"
         private const val BASE = "https://v2.d32.org"
-        private val JSON_TYPE = "application/json; charset=utf-8".toMediaType()
     }
 
     suspend fun post(content: SeoContent): PostResult {
@@ -34,10 +33,10 @@ class V2BoardPoster(private val store: PlatformTokenStore) {
     }
 
     private fun login(): String? {
-        val body = JSONObject().apply {
-            put("email", store.v2Email)
-            put("password", store.v2Password)
-        }.toString().toRequestBody(JSON_TYPE)
+        val body = FormBody.Builder()
+            .add("email", store.v2Email)
+            .add("password", store.v2Password)
+            .build()
 
         val request = Request.Builder()
             .url("$BASE/auth/login.php")
@@ -48,25 +47,26 @@ class V2BoardPoster(private val store: PlatformTokenStore) {
         val responseBody = response.body?.string() ?: ""
         Log.d(TAG, "login HTTP ${response.code}: $responseBody")
 
-        if (!response.isSuccessful && response.code != 302) return null
-
         val json = runCatching { JSONObject(responseBody) }.getOrNull()
-        if (json != null && json.optBoolean("success", false) == false) {
-            Log.w(TAG, "login rejected: ${json.optString("message")}")
+        if (json?.optBoolean("success", false) != true) {
+            Log.w(TAG, "login rejected: ${json?.optString("message")}")
             return null
         }
 
-        // collect Set-Cookie headers
         val cookies = response.headers.values("Set-Cookie")
         if (cookies.isEmpty()) return null
         return cookies.joinToString("; ") { it.substringBefore(";").trim() }
     }
 
     private fun writePost(cookie: String, content: SeoContent): PostResult {
-        val body = JSONObject().apply {
-            put("title", content.title)
-            put("content", content.bodyHtml)
-        }.toString().toRequestBody(JSON_TYPE)
+        val body = MultipartBody.Builder()
+            .setType(MultipartBody.FORM)
+            .addFormDataPart("action", "create")
+            .addFormDataPart("title", content.title)
+            .addFormDataPart("content", content.bodyHtml)
+            .addFormDataPart("target_url", "https://www.d32.org")
+            .addFormDataPart("tags", content.tags.joinToString(","))
+            .build()
 
         val request = Request.Builder()
             .url("$BASE/api/board.php")
@@ -80,8 +80,8 @@ class V2BoardPoster(private val store: PlatformTokenStore) {
         Log.d(TAG, "writePost HTTP ${response.code}: $responseBody")
 
         val json = runCatching { JSONObject(responseBody) }.getOrNull()
-        val success = json?.optBoolean("success", false) ?: response.isSuccessful
-        val postId = json?.optString("id") ?: json?.optString("post_id")
+        val success = json?.optBoolean("success", false) ?: false
+        val postId = json?.optString("id")?.takeIf { it.isNotEmpty() }
         val postUrl = if (postId != null) "$BASE/board_view.php?id=$postId" else "$BASE/board.php"
 
         return if (success) {
