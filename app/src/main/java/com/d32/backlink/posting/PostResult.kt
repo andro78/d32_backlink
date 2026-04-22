@@ -9,6 +9,7 @@ data class PostResult(
     enum class Platform(val label: String) {
         SENCEMOM("Sencemom"),
         TISTORY("Tistory"),
-        MEDIUM("Medium")
+        MEDIUM("Medium"),
+        V2BOARD("v2.d32.org")
     }
 }

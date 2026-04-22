@@ -12,6 +12,7 @@ import com.d32.backlink.R
 import com.d32.backlink.posting.MediumPoster
 import com.d32.backlink.posting.PlatformTokenStore
 import com.d32.backlink.posting.TistoryPoster
+import com.d32.backlink.posting.V2BoardPoster
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 
@@ -39,6 +40,10 @@ class PlatformSettingsActivity : AppCompatActivity() {
 
         f<Switch>(R.id.switchMedium).isChecked    = store.mediumEnabled
         f<EditText>(R.id.etMediumToken).setText(store.mediumToken)
+
+        f<Switch>(R.id.switchV2Board).isChecked   = store.v2Enabled
+        f<EditText>(R.id.etV2Email).setText(store.v2Email)
+        f<EditText>(R.id.etV2Password).setText(store.v2Password)
     }
 
     private fun bindListeners() {
@@ -67,6 +72,16 @@ class PlatformSettingsActivity : AppCompatActivity() {
             }
         }
 
+        f<Button>(R.id.btnV2BoardTest).setOnClickListener {
+            val result = f<TextView>(R.id.tvV2BoardResult)
+            result.text = "로그인 확인 중..."
+            store.v2Email    = f<EditText>(R.id.etV2Email).text.toString().trim()
+            store.v2Password = f<EditText>(R.id.etV2Password).text.toString().trim()
+            lifecycleScope.launch {
+                result.text = V2BoardPoster(store).testConnection()
+            }
+        }
+
         f<Button>(R.id.btnSave).setOnClickListener { save() }
     }
 
@@ -80,6 +95,10 @@ class PlatformSettingsActivity : AppCompatActivity() {
 
         store.mediumEnabled   = f<Switch>(R.id.switchMedium).isChecked
         store.mediumToken     = f<EditText>(R.id.etMediumToken).text.toString().trim()
+
+        store.v2Enabled       = f<Switch>(R.id.switchV2Board).isChecked
+        store.v2Email         = f<EditText>(R.id.etV2Email).text.toString().trim()
+        store.v2Password      = f<EditText>(R.id.etV2Password).text.toString().trim()
 
         Snackbar.make(findViewById(android.R.id.content), "저장 완료", Snackbar.LENGTH_SHORT).show()
     }

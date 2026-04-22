@@ -144,6 +144,54 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
+        <!-- v2.d32.org 카드 -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical">
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                        android:text="v2.d32.org 게시판" android:textSize="15sp" android:textStyle="bold" android:textColor="#1A1A2E"/>
+                    <Switch android:id="@+id/switchV2Board" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                </LinearLayout>
+
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="v2.d32.org 자유게시판에 SEO 글을 자동 게시합니다.\n로그인 후 /api/board.php로 게시됩니다."
+                    android:textSize="12sp" android:textColor="#666" android:layout_marginTop="4dp" android:layout_marginBottom="12dp"/>
+
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="이메일" android:textSize="12sp" android:textColor="#333"/>
+                <EditText android:id="@+id/etV2Email"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:hint="계정 이메일" android:inputType="textEmailAddress" android:textSize="13sp"/>
+
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="비밀번호" android:textSize="12sp" android:textColor="#333" android:layout_marginTop="8dp"/>
+                <EditText android:id="@+id/etV2Password"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:hint="계정 비밀번호" android:inputType="textPassword" android:textSize="13sp"/>
+
+                <Button android:id="@+id/btnV2BoardTest"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp" android:text="로그인 테스트"
+                    android:insetTop="0dp" android:insetBottom="0dp"/>
+
+                <TextView android:id="@+id/tvV2BoardResult"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:textSize="12sp" android:textColor="#2563EB" android:layout_marginTop="4dp"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
         <!-- 저장 버튼 -->
         <Button android:id="@+id/btnSave"
             style="@style/Widget.MaterialComponents.Button"

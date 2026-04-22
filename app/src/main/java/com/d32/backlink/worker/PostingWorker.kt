@@ -15,6 +15,7 @@ import com.d32.backlink.posting.PostResult
 import com.d32.backlink.posting.SencemomPoster
 import com.d32.backlink.posting.SeoContentGenerator
 import com.d32.backlink.posting.TistoryPoster
+import com.d32.backlink.posting.V2BoardPoster
 
 class PostingWorker(ctx: Context, params: WorkerParameters) : CoroutineWorker(ctx, params) {
 
@@ -37,6 +38,7 @@ class PostingWorker(ctx: Context, params: WorkerParameters) : CoroutineWorker(ct
             if (store.sencemomEnabled) add(PostResult.Platform.SENCEMOM)
             if (store.tistoryEnabled)  add(PostResult.Platform.TISTORY)
             if (store.mediumEnabled)   add(PostResult.Platform.MEDIUM)
+            if (store.v2Enabled)       add(PostResult.Platform.V2BOARD)
         }
 
         if (tasks.isEmpty()) {
@@ -48,6 +50,7 @@ class PostingWorker(ctx: Context, params: WorkerParameters) : CoroutineWorker(ct
         val sencemom      = SencemomPoster(store)
         val tistory       = TistoryPoster(store)
         val medium        = MediumPoster(store)
+        val v2board       = V2BoardPoster(store)
         var successCount  = 0
 
         tasks.forEachIndexed { i, platform ->
@@ -57,6 +60,7 @@ class PostingWorker(ctx: Context, params: WorkerParameters) : CoroutineWorker(ct
                 PostResult.Platform.SENCEMOM -> sencemom.post(content)
                 PostResult.Platform.TISTORY  -> tistory.post(content)
                 PostResult.Platform.MEDIUM   -> medium.post(content)
+                PostResult.Platform.V2BOARD  -> v2board.post(content)
             }
 
             if (result.success) successCount++

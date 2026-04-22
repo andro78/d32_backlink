@@ -40,7 +40,19 @@ class PlatformTokenStore private constructor(context: Context) {
         get() = prefs.getString(KEY_MEDIUM_AUTHOR_ID, "") ?: ""
         set(v) = prefs.edit().putString(KEY_MEDIUM_AUTHOR_ID, v).apply()
 
-    val anyEnabled get() = sencemomEnabled || tistoryEnabled || mediumEnabled
+    var v2Enabled: Boolean
+        get() = prefs.getBoolean(KEY_V2_ENABLED, false)
+        set(v) = prefs.edit().putBoolean(KEY_V2_ENABLED, v).apply()
+
+    var v2Email: String
+        get() = prefs.getString(KEY_V2_EMAIL, "") ?: ""
+        set(v) = prefs.edit().putString(KEY_V2_EMAIL, v).apply()
+
+    var v2Password: String
+        get() = prefs.getString(KEY_V2_PASSWORD, "") ?: ""
+        set(v) = prefs.edit().putString(KEY_V2_PASSWORD, v).apply()
+
+    val anyEnabled get() = sencemomEnabled || tistoryEnabled || mediumEnabled || v2Enabled
 
     companion object {
         const val PREF_NAME = "platform_settings"
@@ -52,6 +64,9 @@ class PlatformTokenStore private constructor(context: Context) {
         private const val KEY_MEDIUM_ENABLED    = "medium_enabled"
         private const val KEY_MEDIUM_TOKEN      = "medium_token"
         private const val KEY_MEDIUM_AUTHOR_ID  = "medium_author_id"
+        private const val KEY_V2_ENABLED        = "v2_enabled"
+        private const val KEY_V2_EMAIL          = "v2_email"
+        private const val KEY_V2_PASSWORD       = "v2_password"
 
         @Volatile private var INSTANCE: PlatformTokenStore? = null
 
