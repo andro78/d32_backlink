@@ -1,9 +1,13 @@
 package com.d32.backlink.worker
 
+import android.app.Notification
 import android.content.Context
 import android.util.Log
+import androidx.core.app.NotificationCompat
 import androidx.work.CoroutineWorker
+import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
+import com.d32.backlink.App
 import com.d32.backlink.api.RetrofitClient
 import com.d32.backlink.model.BacklinkTarget
 import kotlinx.coroutines.delay
@@ -30,7 +34,10 @@ class BacklinkWorker(ctx: Context, params: WorkerParameters) : CoroutineWorker(c
         .followRedirects(true)
         .build()
 
+    override suspend fun getForegroundInfo() = buildForegroundInfo("백링크 작업 준비 중...")
+
     override suspend fun doWork(): Result {
+        setForeground(buildForegroundInfo("백링크 작업 실행 중..."))
         Log.d(TAG, "백링크 작업 시작")
 
         val targets = collectTargets()
@@ -107,6 +114,16 @@ class BacklinkWorker(ctx: Context, params: WorkerParameters) : CoroutineWorker(c
             Log.w(TAG, "방문 실패 $url : ${e.message}")
             false
         }
+    }
+
+    private fun buildForegroundInfo(text: String): ForegroundInfo {
+        val notification: Notification = NotificationCompat.Builder(applicationContext, App.NOTIF_CHANNEL_ID)
+            .setContentTitle("D32 Backlink")
+            .setContentText(text)
+            .setSmallIcon(android.R.drawable.ic_popup_sync)
+            .setOngoing(true)
+            .build()
+        return ForegroundInfo(1001, notification)
     }
 
     private fun randomUserAgent(): String {

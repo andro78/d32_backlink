@@ -1,11 +1,17 @@
 package com.d32.backlink.ui
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.work.WorkInfo
 import com.d32.backlink.databinding.ActivityMainBinding
 import com.d32.backlink.worker.BacklinkScheduler
@@ -16,23 +22,36 @@ class MainActivity : AppCompatActivity() {
     private val vm: MainViewModel by viewModels()
     private val adapter = TargetAdapter()
 
+    private val notifPermission = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { /* 결과 무관하게 진행 */ }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         b = ActivityMainBinding.inflate(layoutInflater)
         setContentView(b.root)
 
+        requestNotificationPermission()
         setupRecyclerView()
         setupSpinner()
         setupButtons()
         observeViewModel()
 
-        // 앱 시작 시 링크 자동 로드
         vm.loadTargets()
-        // 기본 스케줄 등록
         BacklinkScheduler.schedule(this, 6)
     }
 
+    private fun requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            notifPermission.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }
+    }
+
     private fun setupRecyclerView() {
+        b.recyclerView.layoutManager = LinearLayoutManager(this)
         b.recyclerView.adapter = adapter
     }
 
