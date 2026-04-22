@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "com.d32.backlink.app-mergeDebugResources-43:/layout/item_target.xml",
+        "source": "com.d32.backlink.app-main-46:/layout/item_target.xml"
+    },
+    {
+        "merged": "com.d32.backlink.app-mergeDebugResources-43:/layout/activity_main.xml",
+        "source": "com.d32.backlink.app-main-46:/layout/activity_main.xml"
+    }
+]

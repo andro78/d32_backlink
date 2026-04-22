@@ -78,9 +78,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun observeViewModel() {
-        vm.targets.observe(this) { list ->
-            adapter.submitList(list)
-            b.tvTargetCount.text = "타겟 ${list.size}개"
+        vm.displayTargets.observe(this) { list ->
+            adapter.submitList(list.toList())
+            val success = list.count { it.status == com.d32.backlink.model.BacklinkTarget.Status.SUCCESS }
+            val failed  = list.count { it.status == com.d32.backlink.model.BacklinkTarget.Status.FAILED }
+            val running = list.count { it.status == com.d32.backlink.model.BacklinkTarget.Status.RUNNING }
+            b.tvTargetCount.text = when {
+                running > 0 || success > 0 || failed > 0 ->
+                    "✅$success  ❌$failed  ⏳${list.size - success - failed - running}"
+                else -> "타겟 ${list.size}개"
+            }
         }
 
         vm.isLoading.observe(this) { loading ->
@@ -93,10 +100,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         vm.workInfos.observe(this) { infos ->
+            vm.onWorkInfosChanged(infos)
             val running = infos.any { it.state == WorkInfo.State.RUNNING }
             b.btnRunNow.isEnabled = !running
             b.tvWorkState.text = when {
-                running                                        -> "⚙️ 실행 중..."
+                running                                            -> "⚙️ 실행 중..."
                 infos.any { it.state == WorkInfo.State.SUCCEEDED } -> "✅ 마지막 실행 성공"
                 infos.any { it.state == WorkInfo.State.FAILED }    -> "❌ 마지막 실행 실패"
                 else                                               -> "⏳ 대기 중"

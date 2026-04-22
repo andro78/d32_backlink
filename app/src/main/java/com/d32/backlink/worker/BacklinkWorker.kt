@@ -7,6 +7,7 @@ import androidx.core.app.NotificationCompat
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
+import androidx.work.workDataOf
 import com.d32.backlink.App
 import com.d32.backlink.api.RetrofitClient
 import com.d32.backlink.model.BacklinkTarget
@@ -20,7 +21,10 @@ class BacklinkWorker(ctx: Context, params: WorkerParameters) : CoroutineWorker(c
 
     companion object {
         const val TAG = "BacklinkWorker"
-        // 고정 소스 사이트 — 이 사이트들이 백링크 발신지
+        const val KEY_URL    = "url"
+        const val KEY_STATUS = "status"
+        const val KEY_DONE   = "done"
+        const val KEY_TOTAL  = "total"
         private val SOURCE_SITES = listOf(
             "https://www.d32.org",
             "https://v2.d32.org",
@@ -48,11 +52,14 @@ class BacklinkWorker(ctx: Context, params: WorkerParameters) : CoroutineWorker(c
 
         Log.d(TAG, "총 ${targets.size}개 타겟 처리 시작")
         var successCount = 0
+        var doneCount = 0
 
         targets.forEach { target ->
+            setProgress(workDataOf(KEY_URL to target.url, KEY_STATUS to "RUNNING", KEY_DONE to doneCount, KEY_TOTAL to targets.size))
             val ok = visitWithReferer(target.url, target.referer)
             if (ok) successCount++
-            // 요청 간 랜덤 딜레이 (3~8초) — 자연스러운 트래픽 패턴
+            doneCount++
+            setProgress(workDataOf(KEY_URL to target.url, KEY_STATUS to if (ok) "SUCCESS" else "FAILED", KEY_DONE to doneCount, KEY_TOTAL to targets.size))
             delay(Random.nextLong(3_000, 8_000))
         }
 
