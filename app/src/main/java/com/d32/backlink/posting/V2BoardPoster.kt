@@ -1,6 +1,8 @@
 package com.d32.backlink.posting
 
 import android.util.Log
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import okhttp3.FormBody
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
@@ -18,9 +20,9 @@ class V2BoardPoster(private val store: PlatformTokenStore) {
         private const val BASE = "https://v2.d32.org"
     }
 
-    suspend fun post(content: SeoContent): PostResult {
-        return try {
-            val cookie = login() ?: return PostResult(
+    suspend fun post(content: SeoContent): PostResult = withContext(Dispatchers.IO) {
+        try {
+            val cookie = login() ?: return@withContext PostResult(
                 platform = PostResult.Platform.V2BOARD,
                 success = false,
                 error = "로그인 실패 — 이메일/비밀번호 확인"
@@ -28,7 +30,7 @@ class V2BoardPoster(private val store: PlatformTokenStore) {
             writePost(cookie, content)
         } catch (e: Exception) {
             Log.e(TAG, "post error", e)
-            PostResult(platform = PostResult.Platform.V2BOARD, success = false, error = e.message)
+            PostResult(platform = PostResult.Platform.V2BOARD, success = false, error = e.message ?: e::class.simpleName)
         }
     }
 
@@ -92,12 +94,12 @@ class V2BoardPoster(private val store: PlatformTokenStore) {
         }
     }
 
-    suspend fun testConnection(): String {
-        return try {
-            login() ?: return "로그인 실패 — 이메일/비밀번호를 확인하세요"
+    suspend fun testConnection(): String = withContext(Dispatchers.IO) {
+        try {
+            login() ?: return@withContext "로그인 실패 — 이메일/비밀번호를 확인하세요"
             "로그인 성공 ✅ (세션 확인됨)"
         } catch (e: Exception) {
-            "오류: ${e.message}"
+            "오류: ${e.message ?: e::class.simpleName}"
         }
     }
 }
