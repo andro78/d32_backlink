@@ -10,7 +10,9 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import com.d32.backlink.App
 import com.d32.backlink.api.RetrofitClient
+import com.d32.backlink.api.V2BoardScraper
 import com.d32.backlink.model.BacklinkTarget
+import com.d32.backlink.posting.PlatformTokenStore
 import kotlinx.coroutines.delay
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -28,6 +30,7 @@ class BacklinkWorker(ctx: Context, params: WorkerParameters) : CoroutineWorker(c
         private val SOURCE_SITES = listOf(
             "https://www.d32.org",
             "https://v2.d32.org",
+            "https://v2.d32.org/board.php",
             "https://sencemom.site/board.html"
         )
     }
@@ -93,7 +96,19 @@ class BacklinkWorker(ctx: Context, params: WorkerParameters) : CoroutineWorker(c
             Log.e(TAG, "게시판 API 실패: ${e.message}")
         }
 
-        // 2) 소스 사이트 자체도 서로 백링크 교차 방문
+        // 2) v2.d32.org 게시판 게시글 수집
+        try {
+            val store = PlatformTokenStore.getInstance(applicationContext)
+            if (store.v2Email.isNotEmpty() && store.v2Password.isNotEmpty()) {
+                val v2Targets = V2BoardScraper.fetchTargets(store.v2Email, store.v2Password)
+                targets += v2Targets
+                Log.d(TAG, "v2.d32.org에서 ${v2Targets.size}개 링크 수집")
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "v2.d32.org 스크래핑 실패: ${e.message}")
+        }
+
+        // 3) 소스 사이트 자체도 서로 백링크 교차 방문
         SOURCE_SITES.forEachIndexed { i, url ->
             val referer = SOURCE_SITES[(i + 1) % SOURCE_SITES.size]
             targets.add(BacklinkTarget(url = url, title = "소스사이트", referer = referer))
