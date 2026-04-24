@@ -79,6 +79,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
                 val sourceSites = listOf(
                     "https://www.d32.org",
                     "https://v2.d32.org",
+                    "https://v2.d32.org/board.php",
                     "https://sencemom.site/board.html"
                 )
                 val list = response.items.mapNotNull { post ->
