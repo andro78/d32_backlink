@@ -10,7 +10,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.d32.backlink.api.RetrofitClient
+import com.d32.backlink.api.V2BoardScraper
 import com.d32.backlink.model.BacklinkTarget
+import com.d32.backlink.posting.PlatformTokenStore
 import com.d32.backlink.worker.BacklinkScheduler
 import com.d32.backlink.worker.BacklinkWorker
 import com.d32.backlink.worker.PostingScheduler
@@ -75,20 +77,31 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
             _isLoading.value = true
             _status.value = "게시판 링크 수집 중..."
             try {
-                val response = RetrofitClient.boardApi.getPosts()
                 val sourceSites = listOf(
                     "https://www.d32.org",
                     "https://v2.d32.org",
                     "https://v2.d32.org/board.php",
                     "https://sencemom.site/board.html"
                 )
-                val list = response.items.mapNotNull { post ->
+
+                // sencemom API 타겟
+                val response = RetrofitClient.boardApi.getPosts()
+                val sencemomTargets = response.items.mapNotNull { post ->
                     val link = post.link?.trim() ?: return@mapNotNull null
                     if (!link.startsWith("http")) return@mapNotNull null
                     BacklinkTarget(url = link, title = post.title, referer = sourceSites[post.id % sourceSites.size])
                 }
+
+                // v2.d32.org 게시글 타겟
+                val store = PlatformTokenStore.getInstance(getApplication())
+                val v2Targets = if (store.v2Email.isNotEmpty() && store.v2Password.isNotEmpty()) {
+                    _status.value = "v2.d32.org 링크 수집 중..."
+                    V2BoardScraper.fetchTargets(store.v2Email, store.v2Password)
+                } else emptyList()
+
+                val list = (sencemomTargets + v2Targets).distinctBy { it.url }
                 _targets.value = list
-                _status.value = "${list.size}개 타겟 로드 완료"
+                _status.value = "${list.size}개 타겟 로드 완료 (sencemom ${sencemomTargets.size} + v2 ${v2Targets.size})"
                 Log.d("ViewModel", "${list.size}개 링크 로드")
             } catch (e: Exception) {
                 _status.value = "로드 실패: ${e.message}"
