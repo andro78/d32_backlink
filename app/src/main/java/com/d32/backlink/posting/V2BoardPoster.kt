@@ -55,9 +55,13 @@ class V2BoardPoster(private val store: PlatformTokenStore) {
             return null
         }
 
-        val cookies = response.headers.values("Set-Cookie")
-        if (cookies.isEmpty()) return null
-        return cookies.joinToString("; ") { it.substringBefore(";").trim() }
+        // 마지막 PHPSESSID만 추출 (서버가 두 번 Set-Cookie를 보내는 경우 첫 번째는 만료된 세션)
+        val phpsessid = response.headers.values("Set-Cookie")
+            .lastOrNull { it.startsWith("PHPSESSID=") }
+            ?.substringBefore(";")
+            ?.trim()
+        Log.d(TAG, "session cookie: $phpsessid")
+        return phpsessid
     }
 
     private fun writePost(cookie: String, content: SeoContent): PostResult {
