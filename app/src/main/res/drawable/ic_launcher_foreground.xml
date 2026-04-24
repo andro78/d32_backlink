@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!--
+        Chain link icon: two interlocking pill shapes rotated -45°
+        Link 1: natural center (37, 54), hw=22, hh=10  → upper-left after rotation
+        Link 2: natural center (71, 54), hw=22, hh=10  → lower-right after rotation
+        Both in same group rotated -45° around icon center (54,54)
+    -->
+    <group
+        android:rotation="-45"
+        android:pivotX="54"
+        android:pivotY="54">
+
+        <!-- Link 1 — soft glow -->
+        <path
+            android:fillColor="#00000000"
+            android:strokeColor="#40FFFFFF"
+            android:strokeWidth="13"
+            android:pathData="M 27,44 H 47 Q 59,44 59,54 Q 59,64 47,64 H 27 Q 15,64 15,54 Q 15,44 27,44 Z"/>
+        <!-- Link 1 — main outline -->
+        <path
+            android:fillColor="#00000000"
+            android:strokeColor="#FFFFFF"
+            android:strokeWidth="7"
+            android:pathData="M 27,44 H 47 Q 59,44 59,54 Q 59,64 47,64 H 27 Q 15,64 15,54 Q 15,44 27,44 Z"/>
+
+        <!-- Link 2 — soft glow -->
+        <path
+            android:fillColor="#00000000"
+            android:strokeColor="#40FFFFFF"
+            android:strokeWidth="13"
+            android:pathData="M 61,44 H 81 Q 93,44 93,54 Q 93,64 81,64 H 61 Q 49,64 49,54 Q 49,44 61,44 Z"/>
+        <!-- Link 2 — main outline -->
+        <path
+            android:fillColor="#00000000"
+            android:strokeColor="#FFFFFF"
+            android:strokeWidth="7"
+            android:pathData="M 61,44 H 81 Q 93,44 93,54 Q 93,64 81,64 H 61 Q 49,64 49,54 Q 49,44 61,44 Z"/>
+    </group>
+
+    <!-- Center accent dot where links overlap -->
+    <path
+        android:fillColor="#E0E8FF"
+        android:pathData="M54,54 m-5,0 a5,5,0,1,0,10,0 a5,5,0,1,0,-10,0"/>
+</vector>
